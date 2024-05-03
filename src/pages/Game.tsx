@@ -2,7 +2,8 @@ import { Chessboard } from "react-chessboard";
 import { BoardPosition } from "react-chessboard/dist/chessboard/types";
 import { useEffect, useState } from "react";
 import {
-    changeToSquare,
+  calculateBoardWidth,
+  changeToSquare,
   createOptionsSquares,
   getKnightSquare,
   randomPosition,
@@ -12,8 +13,7 @@ import { IWin } from "../interfaces";
 import { findNextOptimalMove } from "../AI";
 
 function Game() {
-
-    const [turn, setTurn] = useState<"ai" | "player">("player");
+  const [turn, setTurn] = useState<"ai" | "player">("player");
 
   const [position, setPosition] = useState<BoardPosition>(randomPosition());
 
@@ -21,29 +21,40 @@ function Game() {
     Record<string, React.CSSProperties>
   >(createOptionsSquares(position));
 
+  const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
+
+  const movePiece = (position: string) => {
+    const newPosition: BoardPosition = {};
+    newPosition[position as keyof BoardPosition] = "wN";
+    setPosition(newPosition);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBoardWidth(calculateBoardWidth());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     setOptionsSquars(createOptionsSquares(position));
   }, [position]);
 
-  const movePiece = (position: string) => {
-      const newPosition: BoardPosition = {};
-      newPosition[position as keyof BoardPosition] = "wN";
-      setPosition(newPosition);
-  }
-  
   useEffect(() => {
-        if(turn === "ai") {
-            setTimeout(() => {
-                const winObj: IWin = findNextOptimalMove(getKnightSquare(position));
-                movePiece(changeToSquare(winObj.position));
-                setTurn("player");
-            }, 1000);
-        }
-    }, [turn])
-
+    if (turn === "ai") {
+      setTimeout(() => {
+        const winObj: IWin = findNextOptimalMove(getKnightSquare(position));
+        movePiece(changeToSquare(winObj.position));
+        setTurn("player");
+      }, 1000);
+    }
+  }, [turn]);
 
   const onSquareClick = (square: string) => {
-
     if (turn === "ai") {
       return;
     }
@@ -59,18 +70,18 @@ function Game() {
       movePiece(square);
       setTurn("ai");
     }
-
   };
-
   return (
-    <div>
-      <Chessboard
-        position={position}
-        arePiecesDraggable={false}
-        boardWidth={600}
-        onSquareClick={onSquareClick}
-        customSquareStyles={{ ...optionsSquars }}
-      />
+    <div className="flex justify-center items-center h-full">
+      <div>
+        <Chessboard
+          position={position}
+          arePiecesDraggable={false}
+          boardWidth={boardWidth}
+          onSquareClick={onSquareClick}
+          customSquareStyles={{ ...optionsSquars }}
+        />
+      </div>
     </div>
   );
 }
