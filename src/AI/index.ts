@@ -1,55 +1,32 @@
 import { IWin, Square } from "../interfaces";
-import { moves } from "../utils/constants";
+import { validMoves } from "../utils/functions";
 
 export const findNextOptimalMove = (
-  currentPosition: Square,
-  turn: "ai" | "player" = "ai"
+    currentPosition: Square,
+    turn: "ai" | "player" = "ai",
 ): IWin => {
-  if (turn === "ai") {
-    let optimalMove: IWin = { position: currentPosition, win: false };
-    for (const move of moves) {
-      const nextPosition = {
-        row: currentPosition.row + move.row,
-        col: currentPosition.col + move.col,
-      };
-      if (
-        nextPosition.row >= 0 &&
-        nextPosition.row < 8 &&
-        nextPosition.col >= 0 &&
-        nextPosition.col < 8
-      ) {
-        const win = findNextOptimalMove(nextPosition, "player");
-        if (!optimalMove.win)
-          optimalMove = { position: nextPosition, win: win.win };
-        if (!win.win) {
-          optimalMove = { position: nextPosition, win: true };
-          break;
-        }
-      }
+    const moves = validMoves(currentPosition);
+    if (moves.length === 0)
+        return { position: currentPosition, win: turn === "player" };
+    console.log("moves: " + moves.length);
+    if (turn === "ai") {
+        let optimalMove: IWin = { position: currentPosition, win: false };
+        moves.forEach((nextPosition) => {
+            const win = findNextOptimalMove(nextPosition, "player");
+            if (win.win >= optimalMove.win)
+                optimalMove = { position: nextPosition, win: win.win };
+        });
+        return optimalMove;
+    } else {
+        let optimalMove: IWin = {
+            position: currentPosition,
+            win: true,
+        };
+        moves.forEach((nextPosition) => {
+            const win = findNextOptimalMove(nextPosition, "ai");
+            if (win.win <= optimalMove.win)
+                optimalMove = { position: nextPosition, win: win.win };
+        });
+        return optimalMove;
     }
-    return optimalMove;
-  } else {
-    let optimalMove: IWin = { position: currentPosition, win: true };
-    for (const move of moves) {
-      const nextPosition = {
-        row: currentPosition.row + move.row,
-        col: currentPosition.col + move.col,
-      };
-      if (
-        nextPosition.row >= 0 &&
-        nextPosition.row < 8 &&
-        nextPosition.col >= 0 &&
-        nextPosition.col < 8
-      ) {
-        const win = findNextOptimalMove(nextPosition, "ai");
-        if (optimalMove.win)
-          optimalMove = { position: nextPosition, win: win.win };
-        if (win.win) {
-          optimalMove = { position: nextPosition, win: false };
-          break;
-        }
-      }
-    }
-    return optimalMove;
-  }
 };
