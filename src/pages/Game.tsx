@@ -2,13 +2,19 @@ import { Chessboard } from "react-chessboard";
 import { BoardPosition } from "react-chessboard/dist/chessboard/types";
 import { useEffect, useState } from "react";
 import {
+    changeToSquare,
   createOptionsSquares,
   getKnightSquare,
   randomPosition,
   validMoves,
 } from "../utils/functions";
+import { IWin } from "../interfaces";
+import { findNextOptimalMove } from "../AI";
 
 function Game() {
+
+    const [turn, setTurn] = useState<"ai" | "player">("player");
+
   const [position, setPosition] = useState<BoardPosition>(randomPosition());
 
   const [optionsSquars, setOptionsSquars] = useState<
@@ -19,7 +25,21 @@ function Game() {
     setOptionsSquars(createOptionsSquares(position));
   }, [position]);
 
+  useEffect(() => {
+        if(turn === "ai") {
+            setTimeout(() => {
+                const winObj: IWin = findNextOptimalMove(getKnightSquare(position));
+                console.log("move the piece to", changeToSquare(winObj.position));
+                console.log("win", winObj.win);
+                onSquareClick(changeToSquare(winObj.position));
+                setTurn("player");
+            }, 1000);
+          return;
+        }
+    }, [turn])
+
   const onSquareClick = (square: string) => {
+
     const squareRow = square.charCodeAt(0) - "a".charCodeAt(0);
     const squareCol = parseInt(square[1]) - 1;
 
@@ -33,20 +53,11 @@ function Game() {
       const newPosition: BoardPosition = {};
       newPosition[square as keyof BoardPosition] = "wN";
       setPosition(newPosition);
+      setTurn("ai");
       return;
     }
 
-    if (!position[square as keyof BoardPosition]) {
-      return;
-    }
-
-    const moves = validMoves({ row: squareRow, col: squareCol });
-    const newPosition: BoardPosition = {};
-    moves.forEach((move) => {
-      const moveSquare =
-        String.fromCharCode("a".charCodeAt(0) + move.row) + (move.col + 1);
-      newPosition[moveSquare as keyof BoardPosition] = "wN";
-    });
+    return;
   };
 
   return (

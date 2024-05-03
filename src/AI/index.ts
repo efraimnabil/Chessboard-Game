@@ -3,9 +3,9 @@ import { moves } from "../utils/constants";
 
 export const findNextOptimalMove = (
   currentPosition: Square,
-  turn: boolean
+  turn: "ai" | "player" = "ai"
 ): IWin => {
-  if (turn) {
+  if (turn === "ai") {
     let optimalMove: IWin = { position: currentPosition, win: false };
     for (const move of moves) {
       const nextPosition = {
@@ -18,7 +18,7 @@ export const findNextOptimalMove = (
         nextPosition.col >= 0 &&
         nextPosition.col < 8
       ) {
-        const win = findNextOptimalMove(nextPosition, !turn);
+        const win = findNextOptimalMove(nextPosition, "player");
         if (!optimalMove.win)
           optimalMove = { position: nextPosition, win: win.win };
         if (!win.win) {
@@ -41,7 +41,7 @@ export const findNextOptimalMove = (
         nextPosition.col >= 0 &&
         nextPosition.col < 8
       ) {
-        const win = findNextOptimalMove(nextPosition, !turn);
+        const win = findNextOptimalMove(nextPosition, "ai");
         if (optimalMove.win)
           optimalMove = { position: nextPosition, win: win.win };
         if (win.win) {
