@@ -10,7 +10,7 @@ const Home = ({}: IProps) => {
     navigate('/game')
   }
   return (
-    <div className="w-full h-screen flex flex-col justify-center space-y-10 items-center p-10">
+    <div className="w-full flex flex-col justify-center space-y-10 items-center p-10">
         <h1 
           className="text-4xl font-bold">
             Welcome to our Knight Game !
