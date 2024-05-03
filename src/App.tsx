@@ -1,7 +1,7 @@
 import { Chessboard } from 'react-chessboard'
 import './App.css'
 import { BoardPosition } from 'react-chessboard/dist/chessboard/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function App() {
 
@@ -39,6 +39,36 @@ function App() {
           return square.row >= 0 && square.row < 8 && square.col >= 0 && square.col < 8
       })
   }
+
+  const changeToSquare = (square: Square): string => {
+      return String.fromCharCode('a'.charCodeAt(0) + square.row) + (square.col + 1)
+  }
+
+  const createOptionsSquares = (): Record<string, React.CSSProperties> => {
+      const knightRow = position ? Object.keys(position).map(square => {
+          return square.charCodeAt(0) - 'a'.charCodeAt(0)
+      }
+      )[0] : 0
+      const knightCol = position ? Object.keys(position).map(square => {
+          return parseInt(square[1]) - 1
+      }
+      )[0] : 0
+      const moves = validMoves({row: knightRow, col: knightCol})
+      const optionsSquares: Record<string, React.CSSProperties> = {}
+      moves.forEach(move => {
+          optionsSquares[changeToSquare(move)] = {backgroundColor: 'green'}
+      })
+      return optionsSquares
+  }
+
+
+  // the options squares are the squares that the knight can move to
+  const [optionsSquars, setOptionsSquars] = useState< Record<string, React.CSSProperties>>(createOptionsSquares())
+
+  useEffect(() => {
+      setOptionsSquars(createOptionsSquares())
+  }
+  , [position])
 
   const onSquareClick = (square: string) => {
 
@@ -91,6 +121,10 @@ function App() {
           position={position}
           arePiecesDraggable={false}
           boardWidth={600}
+          onSquareClick={onSquareClick}
+          customSquareStyles={
+            {...optionsSquars}
+        }
       />
     </div>
   )
