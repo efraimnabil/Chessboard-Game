@@ -40,6 +40,49 @@ function App() {
       })
   }
 
+  const onSquareClick = (square: string) => {
+
+      const knightRow = position ? Object.keys(position).map(square => {
+          return square.charCodeAt(0) - 'a'.charCodeAt(0)
+      }
+      )[0] : 0
+      const knightCol = position ? Object.keys(position).map(square => {
+          return parseInt(square[1]) - 1
+      }
+      )[0] : 0
+
+      const squareRow = square.charCodeAt(0) - 'a'.charCodeAt(0)
+      const squareCol = parseInt(square[1]) - 1
+
+      console.log(validMoves({row: squareRow, col: squareCol}))
+
+      console.log('clicked square', square.charCodeAt(0) - 'a'.charCodeAt(0), parseInt(square[1]) - 1)
+
+      const validMove = validMoves({row: knightRow, col: knightCol}).filter(move => {
+          return move.row === squareRow && move.col === squareCol
+      }).length
+
+      if(validMove) {
+          // move the piece
+          console.log('move the piece to', square)
+          const newPosition: BoardPosition = {}
+          newPosition[square as keyof BoardPosition] = 'wN'
+          setPosition(newPosition)
+          return
+      }
+
+      if (!position || !position[square as keyof BoardPosition]) {
+          return
+      }
+
+      const moves = validMoves({row: squareRow, col: squareCol})
+      const newPosition: BoardPosition = {}
+      moves.forEach(move => {
+          const moveSquare = String.fromCharCode('a'.charCodeAt(0) + move.row) + (move.col + 1)
+          newPosition[moveSquare as keyof BoardPosition] = 'wN'
+      })
+  }
+
 
 
   return (
