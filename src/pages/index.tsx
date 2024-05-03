@@ -24,14 +24,14 @@ const Home = ({}: IProps) => {
             The game starts with a single Knight located at some random position. 
           </li>
           <li>
-            In each move, a player must move the coin from cell  to one of the following locations:
+            In each move, a player must move the Knight from cell to one of the following locations:
             <ul className="list-disc list-inside ml-5">
               <li>2 cells left and 1 cell down</li>
               <li>2 cells left and 1 cell up</li>
               <li>1 cell right and 2 cells down</li>
               <li>1 cell left and 2 cells down</li>
               <p className="text-sm">
-                Note: The coin must remain inside the confines of the board.
+                Note: The Knight must remain inside the confines of the board.
               </p>
             </ul>
           </li>
