@@ -25,20 +25,28 @@ function Game() {
     setOptionsSquars(createOptionsSquares(position));
   }, [position]);
 
+  const movePiece = (position: string) => {
+      const newPosition: BoardPosition = {};
+      newPosition[position as keyof BoardPosition] = "wN";
+      setPosition(newPosition);
+  }
+  
   useEffect(() => {
         if(turn === "ai") {
             setTimeout(() => {
                 const winObj: IWin = findNextOptimalMove(getKnightSquare(position));
-                console.log("move the piece to", changeToSquare(winObj.position));
-                console.log("win", winObj.win);
-                onSquareClick(changeToSquare(winObj.position));
+                movePiece(changeToSquare(winObj.position));
                 setTurn("player");
             }, 1000);
-          return;
         }
     }, [turn])
 
+
   const onSquareClick = (square: string) => {
+
+    if (turn === "ai") {
+      return;
+    }
 
     const squareRow = square.charCodeAt(0) - "a".charCodeAt(0);
     const squareCol = parseInt(square[1]) - 1;
@@ -48,16 +56,10 @@ function Game() {
     }).length;
 
     if (validMove) {
-      // move the piece
-      console.log("move the piece to", square);
-      const newPosition: BoardPosition = {};
-      newPosition[square as keyof BoardPosition] = "wN";
-      setPosition(newPosition);
+      movePiece(square);
       setTurn("ai");
-      return;
     }
 
-    return;
   };
 
   return (
