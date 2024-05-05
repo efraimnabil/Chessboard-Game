@@ -21,12 +21,6 @@ function Game() {
     Record<string, React.CSSProperties>
   >(createOptionsSquares(position));
 
-  /*[
-    [a1, a2, "#48AD7E"],
-    [a1, a2, "#48AD7E"],
-  ] 
-  */
-
   const [arrows, setArrows] = useState<Arrow[]>()
 
   const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
@@ -64,7 +58,12 @@ function Game() {
 
   const getHint = () => {
     const winObj: IWin = findNextOptimalMove(getKnightSquare(position), "player");
-    setArrows([[Object.keys(position)[0] as Square, changeToSquare(winObj.position) as Square]])
+    setArrows([
+      [
+        Object.keys(position)[0] as Square,
+        changeToSquare(winObj.position) as Square
+      ]
+    ])
   }
 
   const onSquareClick = (square: string) => {
@@ -108,6 +107,7 @@ function Game() {
     <div className="flex flex-col justify-center items-center h-full">
       <button 
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        disabled={turn === "ai"}
         onClick={getHint}
       >
         get hint
