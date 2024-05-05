@@ -1,5 +1,5 @@
 import { Chessboard } from "react-chessboard";
-import { BoardPosition, Piece, Square } from "react-chessboard/dist/chessboard/types";
+import { Arrow, BoardPosition, Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { useEffect, useState } from "react";
 import {
   calculateBoardWidth,
@@ -20,6 +20,14 @@ function Game() {
   const [optionsSquars, setOptionsSquars] = useState<
     Record<string, React.CSSProperties>
   >(createOptionsSquares(position));
+
+  /*[
+    [a1, a2, "#48AD7E"],
+    [a1, a2, "#48AD7E"],
+  ] 
+  */
+
+  const [arrows, setArrows] = useState<Arrow[]>()
 
   const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
 
@@ -54,10 +62,16 @@ function Game() {
     }
   }, [turn]);
 
+  const getHint = () => {
+    const winObj: IWin = findNextOptimalMove(getKnightSquare(position), "player");
+    setArrows([[Object.keys(position)[0] as Square, changeToSquare(winObj.position) as Square]])
+  }
+
   const onSquareClick = (square: string) => {
     if (turn === "ai") {
       return;
     }
+    setArrows([])
 
     const squareRow = square.charCodeAt(0) - "a".charCodeAt(0);
     const squareCol = parseInt(square[1]) - 1;
@@ -91,14 +105,27 @@ function Game() {
 
   return (
     <div className="flex justify-center items-center h-full">
+      <button 
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={getHint}
+      >
+        get hint
+      </button>
       <div>
         <Chessboard
           position={position}
           boardWidth={boardWidth}
           onSquareClick={onSquareClick}
           customSquareStyles={{ ...optionsSquars }}
+          customBoardStyle={{
+            borderRadius: "10px",
+            boxShadow: "inset 0 2px 0px #dcffa6, 0 2px 5px #fff",
+          }}
           onPieceDrop={onDrop}
           arePiecesDraggable={turn === "player"}
+          customDarkSquareStyle={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
+          customLightSquareStyle={{ backgroundColor: "rgba(255, 255, 255, 0.90)" }}
+          customArrows={arrows}
         />
       </div>
     </div>
