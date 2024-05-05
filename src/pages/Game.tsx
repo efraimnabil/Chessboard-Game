@@ -89,6 +89,7 @@ function Game() {
   const onDrop = (_sourceSquare: Square, targetSquare: Square, _piece: Piece) => { 
     const targetRow = targetSquare.charCodeAt(0) - "a".charCodeAt(0);
     const targetCol = parseInt(targetSquare[1]) - 1;
+    setArrows([])
 
     const validMove = validMoves(getKnightSquare(position)).filter((move) => {
       return move.row === targetRow && move.col === targetCol;
@@ -104,7 +105,7 @@ function Game() {
   }
 
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center h-full">
       <button 
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={getHint}
