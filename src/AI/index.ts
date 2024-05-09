@@ -8,7 +8,6 @@ export const findNextOptimalMove = (
     const moves = validMoves(currentPosition);
     if (moves.length === 0)
         return { position: currentPosition, win: turn === "player" };
-    console.log("moves: " + moves.length);
     if (turn === "ai") {
         let optimalMove: IWin = { position: currentPosition, win: false };
         moves.forEach((nextPosition) => {

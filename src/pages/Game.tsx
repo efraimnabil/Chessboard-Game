@@ -1,5 +1,10 @@
 import { Chessboard } from "react-chessboard";
-import { Arrow, BoardPosition, Piece, Square } from "react-chessboard/dist/chessboard/types";
+import {
+  Arrow,
+  BoardPosition,
+  Piece,
+  Square,
+} from "react-chessboard/dist/chessboard/types";
 import { useEffect, useState } from "react";
 import {
   calculateBoardWidth,
@@ -14,6 +19,7 @@ import { findNextOptimalMove } from "../AI";
 
 function Game() {
   const [turn, setTurn] = useState<"ai" | "player">("player");
+  const [gameOver, setGameOver] = useState(false);
 
   const [position, setPosition] = useState<BoardPosition>(randomPosition());
 
@@ -21,14 +27,31 @@ function Game() {
     Record<string, React.CSSProperties>
   >(createOptionsSquares(position));
 
-  const [arrows, setArrows] = useState<Arrow[]>()
+  const [arrows, setArrows] = useState<Arrow[]>();
 
   const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
+
+  // const checkGameOver = () => {
+  //   const knightSquare = getKnightSquare(position);
+  //   const possibleMoves = validMoves(knightSquare);
+  //   console.log(possibleMoves);
+  //   if (possibleMoves.length === 0) {
+  //     console.log("game over");
+  //     setGameOver(true);
+  //   }
+  // };
 
   const movePiece = (position: string) => {
     const newPosition: BoardPosition = {};
     newPosition[position as keyof BoardPosition] = "wN";
     setPosition(newPosition);
+    const knightSquare = getKnightSquare(newPosition);
+    const possibleMoves = validMoves(knightSquare);
+    if (possibleMoves.length === 0) {
+      setGameOver(true);
+    } else {
+      setTurn(turn === "ai" ? "player" : "ai");
+    }
   };
 
   useEffect(() => {
@@ -51,26 +74,28 @@ function Game() {
       setTimeout(() => {
         const winObj: IWin = findNextOptimalMove(getKnightSquare(position));
         movePiece(changeToSquare(winObj.position));
-        setTurn("player");
       }, 1000);
     }
   }, [turn]);
 
   const getHint = () => {
-    const winObj: IWin = findNextOptimalMove(getKnightSquare(position), "player");
+    const winObj: IWin = findNextOptimalMove(
+      getKnightSquare(position),
+      "player"
+    );
     setArrows([
       [
         Object.keys(position)[0] as Square,
-        changeToSquare(winObj.position) as Square
-      ]
-    ])
-  }
+        changeToSquare(winObj.position) as Square,
+      ],
+    ]);
+  };
 
   const onSquareClick = (square: string) => {
     if (turn === "ai") {
       return;
     }
-    setArrows([])
+    setArrows([]);
 
     const squareRow = square.charCodeAt(0) - "a".charCodeAt(0);
     const squareCol = parseInt(square[1]) - 1;
@@ -81,14 +106,17 @@ function Game() {
 
     if (validMove) {
       movePiece(square);
-      setTurn("ai");
     }
   };
-  
-  const onDrop = (_sourceSquare: Square, targetSquare: Square, _piece: Piece) => { 
+
+  const onDrop = (
+    _sourceSquare: Square,
+    targetSquare: Square,
+    _piece: Piece
+  ) => {
     const targetRow = targetSquare.charCodeAt(0) - "a".charCodeAt(0);
     const targetCol = parseInt(targetSquare[1]) - 1;
-    setArrows([])
+    setArrows([]);
 
     const validMove = validMoves(getKnightSquare(position)).filter((move) => {
       return move.row === targetRow && move.col === targetCol;
@@ -96,16 +124,20 @@ function Game() {
 
     if (validMove) {
       movePiece(targetSquare);
-      setTurn("ai");
       return true;
     }
 
     return false;
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
-      <button 
+      {gameOver && (
+        <div className="bg-red-500 text-white p-2 rounded">
+          Game Over and {turn === "ai" ? "Ai wins" : "You win"}
+        </div>
+      )}
+      <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         disabled={turn === "ai"}
         onClick={getHint}
@@ -125,7 +157,9 @@ function Game() {
           onPieceDrop={onDrop}
           arePiecesDraggable={turn === "player"}
           customDarkSquareStyle={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
-          customLightSquareStyle={{ backgroundColor: "rgba(255, 255, 255, 0.90)" }}
+          customLightSquareStyle={{
+            backgroundColor: "rgba(255, 255, 255, 0.90)",
+          }}
           customArrows={arrows}
         />
       </div>
