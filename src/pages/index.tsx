@@ -1,4 +1,7 @@
+import { Environment, OrbitControls } from "@react-three/drei"
+import { Canvas } from "@react-three/fiber"
 import { useNavigate } from "react-router-dom"
+import { Model } from "../components/Model"
 
 interface IProps {
 
@@ -15,6 +18,18 @@ const Home = ({}: IProps) => {
           className="text-4xl font-bold">
             Welcome to our Knight Game !
         </h1>
+        <div className="w-96 h-96">
+          <Canvas camera={{position: [0, 20, -70]}}>
+            <ambientLight color={"#000"} />
+            <Model 
+              specificXPosition={0}
+              specificYPosition={0}
+              specificZPosition={0}
+            />
+            <Environment preset='night'/>
+            <OrbitControls autoRotate autoRotateSpeed={10}/>
+          </Canvas>
+        </div>
         <p 
           className="text-2xl">
             You and AI are playing a game on a chessboard. The rules of the game are as follows:
