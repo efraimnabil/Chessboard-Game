@@ -43,7 +43,7 @@ const Home = () => {
         </button>
       </div>
 
-      <div className="w-96 h-96 flex items-center justify-center">
+      <div className="w-full h-96 flex items-center justify-center">
         <Suspense fallback={<Loader />}>
           <Canvas camera={{ position: [0, 20, -70] }}>
             <ambientLight color={"#000"} />
@@ -53,7 +53,7 @@ const Home = () => {
               specificZPosition={0}
             />
             <Environment preset="sunset" />
-            <OrbitControls autoRotate autoRotateSpeed={10} />
+            <OrbitControls autoRotate autoRotateSpeed={10} enableZoom={false} enableRotate={false} />
           </Canvas>
         </Suspense>
       </div>

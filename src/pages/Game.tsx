@@ -31,16 +31,6 @@ function Game() {
 
   const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
 
-  // const checkGameOver = () => {
-  //   const knightSquare = getKnightSquare(position);
-  //   const possibleMoves = validMoves(knightSquare);
-  //   console.log(possibleMoves);
-  //   if (possibleMoves.length === 0) {
-  //     console.log("game over");
-  //     setGameOver(true);
-  //   }
-  // };
-
   const movePiece = (position: string) => {
     const newPosition: BoardPosition = {};
     newPosition[position as keyof BoardPosition] = "wN";
