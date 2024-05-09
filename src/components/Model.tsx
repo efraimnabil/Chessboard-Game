@@ -6,7 +6,7 @@ interface IProps {
     specificZPosition: number;
 }
 export function Model({specificXPosition, specificYPosition, specificZPosition}: IProps) {
-  const model = useGLTF("/chess_pieces_knight.glb");
+  const model = useGLTF("/compressed.glb");
 
   return (
     <mesh position={[specificXPosition, specificYPosition, specificZPosition]}>
