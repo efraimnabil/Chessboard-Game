@@ -120,20 +120,39 @@ function Game() {
     return false;
   };
 
+  const startAgain = () => {
+    setPosition(randomPosition())
+    setTurn("player");
+    setGameOver(false)
+  }
+
   return (
-    <div className="flex flex-col justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center h-full space-y-3 font-Gayathri">
       {gameOver && (
-        <div className="bg-red-500 text-white p-2 rounded">
-          Game Over and {turn === "ai" ? "Ai wins" : "You win"}
+        <>
+        <div className={`p-2 ${turn === "ai" ? "bg-red-500" : "bg-green-500"} rounded`}>
+          <h1 className="text-white text-2xl font-bold">
+            {turn === "ai" ? "You Lost" : "You Won"}
+          </h1>
         </div>
+
+        <button
+          className="bg-[#D2E9F0] text-black font-bold px-8  pt-2 pb-1 rounded text-lg"
+          onClick={startAgain}
+        >
+          Start Again
+        </button>
+        </>
       )}
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        disabled={turn === "ai"}
+      { !gameOver && <button
+        className="text-white font-bold px-4 pt-2 pb-1 border rounded text-lg"
+        disabled={turn === "ai" || gameOver}
         onClick={getHint}
       >
         get hint
       </button>
+      }
+
       <div>
         <Chessboard
           position={position}

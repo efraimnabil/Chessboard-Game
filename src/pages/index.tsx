@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Model } from "../components/Model";
 import { Suspense, useRef } from "react";
 import Loader from "../components/Loader";
-
+import options from "../assets/options.png";
 const Home = () => {
   const navigate = useNavigate();
   const rulesRef = useRef<HTMLHeadingElement>(null);
@@ -27,16 +27,17 @@ const Home = () => {
       <p className="text-2xl text-[#D2E9F0]">
         You and AI are playing a game on a chessboard.
       </p>
+      
 
-      <div className="flex space-x-3">
+      <div className="flex md:flex-row flex-col gap-3">
         <button
-          className="text-white font-bold py-1 px-4 border rounded text-lg"
+          className="text-white font-bold px-4 pt-2 pb-1 border rounded text-lg"
           onClick={scrollToRules}
         >
           Show Rules
         </button>
         <button
-          className="bg-[#D2E9F0] text-black font-bold py-1 px-8 rounded text-lg"
+          className="bg-[#D2E9F0] text-black font-bold px-8  pt-2 pb-1 rounded text-lg"
           onClick={startGame}
         >
           Start Game
@@ -62,26 +63,18 @@ const Home = () => {
         Rules
       </h1>
 
-      <ul className="text-2xl list-disc list-inside">
+      <ul className="text-2xl list-disc space-y-3">
         <li>
-          The game starts with a single Knight located at some random position.
+          You have a Knight on a chessboard. Starts at a random position.
         </li>
         <li>
-          In each move, a player must move the Knight from cell to one of the
-          following locations:
-          <ul className="list-disc list-inside ml-5">
-            <li>2 cells left and 1 cell down</li>
-            <li>2 cells left and 1 cell up</li>
-            <li>1 cell right and 2 cells down</li>
-            <li>1 cell left and 2 cells down</li>
-            <p className="text-sm">
-              Note: The Knight must remain inside the confines of the board.
-            </p>
-          </ul>
+          Here are the valid moves for the Knight:
+          <div className="flex justify-center my-10">
+            <img src={options} alt="options" className="w-64" />
+          </div>
         </li>
         <li>
-          The players move in alternating turns. The first player who is unable
-          to make a move loses the game.
+          You and AI will take turns moving the Knight. The first cannot move loses.
         </li>
       </ul>
     </div>
