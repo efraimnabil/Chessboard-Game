@@ -1,30 +1,31 @@
-# React + TypeScript + Vite
+# Knight Game Against AI 🎮🤖
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Challenge yourself in this strategic game where you compete against an AI-powered opponent using a knight on a chessboard.  
 
-Currently, two official plugins are available:
+## 📜 Rules
+- The game takes place on a chessboard with a knight starting at a **random position**.  
+- **Valid Moves**:
+  
+  ![Options Screen](src/assets/options.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Turn-Based Gameplay**: You and the AI take turns moving the knight.  
+- **Objective**: The first player unable to make a valid move **loses**.
 
-## Expanding the ESLint configuration
+## 🚀 Features
+- Play against an AI that calculates the best moves using the **Minmax algorithm**.  
+- Get **hints** for optimal moves.  
+- Simple and intuitive interface.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🎨 Tech Stack
+- **Frontend**: React.js, TypeScript, Tailwind CSS.  
+- **AI Logic**: Minmax algorithm.  
 
-- Configure the top-level `parserOptions` property like this:
+## 📚 Inspiration
+This project was inspired by studying game theory. Learn more about the problem that inspired us [here](https://www.hackerrank.com/contests/5-days-of-game-theory/challenges/day-1-a-chessboard-game).
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## 🙌 Team Contributions
+- **Mina Magdy**
+- **Efraim Nabil**
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 💬 Feedback
+We’d love to hear your thoughts and see if you can beat the AI without using hints! 😊
